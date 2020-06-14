@@ -57,9 +57,19 @@ a a a 8 8 8 8 8 8 8 8 8 8 8 8 8
 a a a a a a a a a a a a a a a a 
 `
 }
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, otherSprite) {
+    game.over(false)
+})
+controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (Sonic.y >= 80) {
+        Sonic.vy = -175
+    }
+})
 let Missile: Sprite = null
+let Missile_Speed = 0
+let Sonic: Sprite = null
 scene.setBackgroundColor(9)
-let Sonic = sprites.create(img`
+Sonic = sprites.create(img`
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . 8 8 8 8 8 8 8 8 8 8 8 8 . . . . . . . . 
 . . . . . . . . . . 8 8 8 8 8 8 8 9 9 6 6 6 6 8 8 8 . . . 8 . . 
@@ -93,8 +103,9 @@ f f 2 f . 8 . . 8 8 8 8 8 8 9 9 8 8 . . . 9 . . . . . . . . . .
 . . . . . . . f f f f 2 d d 2 2 2 2 2 2 2 2 2 2 . . . . . . . . 
 . . . . . . . . . . . f f f f f f f f f f . . . . . . . . . . . 
 `, SpriteKind.Player)
-Sonic.setPosition(15, 80)
+Sonic.setPosition(18, 80)
 game.onUpdateInterval(2000, function () {
+    Missile_Speed = -100 - game.runtime() / 225
     Missile = sprites.createProjectileFromSide(img`
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
@@ -130,4 +141,13 @@ f 2 2 2 c c b b 1 1 1 1 1 b c c c f f f f f f 1 1 1 1 5 5 5 4 4
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
 `, -100, 0)
     Missile.setPosition(153, 88)
+    info.changeScoreBy(10)
+})
+game.onUpdate(function () {
+    if (Sonic.y < 80) {
+        Sonic.ay = 450
+    } else {
+        Sonic.ay = 0
+        Sonic.vy = 0
+    }
 })
